@@ -1,0 +1,102 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'loginMonitor.ui'
+#
+# Created: Tue Jan 27 17:38:51 2009
+#      by: PyQt4 UI code generator 4.4.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+class Ui_LoginConfig(object):
+    def setupUi(self, LoginConfig):
+        LoginConfig.setObjectName("LoginConfig")
+        LoginConfig.resize(504, 255)
+        self.gridLayout = QtGui.QGridLayout(LoginConfig)
+        self.gridLayout.setObjectName("gridLayout")
+        self.label_2 = QtGui.QLabel(LoginConfig)
+        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_2.setObjectName("label_2")
+        self.gridLayout.addWidget(self.label_2, 5, 1, 1, 1)
+        self.passwordEdit = KLineEdit(LoginConfig)
+        self.passwordEdit.setEchoMode(QtGui.QLineEdit.Password)
+        self.passwordEdit.setPasswordMode(True)
+        self.passwordEdit.setObjectName("passwordEdit")
+        self.gridLayout.addWidget(self.passwordEdit, 5, 2, 1, 1)
+        self.label_7 = QtGui.QLabel(LoginConfig)
+        font = QtGui.QFont()
+        font.setWeight(75)
+        font.setBold(True)
+        self.label_7.setFont(font)
+        self.label_7.setObjectName("label_7")
+        self.gridLayout.addWidget(self.label_7, 7, 0, 1, 2)
+        self.label_4 = QtGui.QLabel(LoginConfig)
+        self.label_4.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_4.setObjectName("label_4")
+        self.gridLayout.addWidget(self.label_4, 8, 1, 1, 1)
+        self.horizontalLayout_2 = QtGui.QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.updateIntervalSpinBox = QtGui.QSpinBox(LoginConfig)
+        self.updateIntervalSpinBox.setMinimum(1)
+        self.updateIntervalSpinBox.setMaximum(999)
+        self.updateIntervalSpinBox.setObjectName("updateIntervalSpinBox")
+        self.horizontalLayout_2.addWidget(self.updateIntervalSpinBox)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_2.addItem(spacerItem)
+        self.gridLayout.addLayout(self.horizontalLayout_2, 8, 2, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(20, 10, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.gridLayout.addItem(spacerItem1, 6, 1, 1, 1)
+        self.label = QtGui.QLabel(LoginConfig)
+        self.label.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label.setObjectName("label")
+        self.gridLayout.addWidget(self.label, 4, 1, 1, 1)
+        self.usernameEdit = KLineEdit(LoginConfig)
+        self.usernameEdit.setObjectName("usernameEdit")
+        self.gridLayout.addWidget(self.usernameEdit, 4, 2, 1, 1)
+        spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem2, 9, 1, 1, 1)
+        self.label_6 = QtGui.QLabel(LoginConfig)
+        font = QtGui.QFont()
+        font.setWeight(75)
+        font.setBold(True)
+        self.label_6.setFont(font)
+        self.label_6.setObjectName("label_6")
+        self.gridLayout.addWidget(self.label_6, 3, 0, 1, 2)
+        self.label_3 = QtGui.QLabel(LoginConfig)
+        font = QtGui.QFont()
+        font.setWeight(75)
+        font.setBold(True)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+        self.gridLayout.addWidget(self.label_3, 0, 0, 1, 1)
+        self.providerComboBox = KComboBox(LoginConfig)
+        self.providerComboBox.setObjectName("providerComboBox")
+        self.gridLayout.addWidget(self.providerComboBox, 1, 2, 1, 1)
+        self.label_5 = QtGui.QLabel(LoginConfig)
+        self.label_5.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_5.setObjectName("label_5")
+        self.gridLayout.addWidget(self.label_5, 1, 1, 1, 1)
+        spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem3, 2, 1, 1, 1)
+        self.label_2.setBuddy(self.passwordEdit)
+        self.label_4.setBuddy(self.updateIntervalSpinBox)
+        self.label.setBuddy(self.usernameEdit)
+
+        self.retranslateUi(LoginConfig)
+        QtCore.QMetaObject.connectSlotsByName(LoginConfig)
+        LoginConfig.setTabOrder(self.usernameEdit, self.passwordEdit)
+        LoginConfig.setTabOrder(self.passwordEdit, self.updateIntervalSpinBox)
+
+    def retranslateUi(self, LoginConfig):
+        self.label_2.setText(QtGui.QApplication.translate("LoginConfig", "Password:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_7.setText(QtGui.QApplication.translate("LoginConfig", "Appearance", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("LoginConfig", "Refresh:", None, QtGui.QApplication.UnicodeUTF8))
+        self.updateIntervalSpinBox.setSuffix(QtGui.QApplication.translate("LoginConfig", " minutes", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("LoginConfig", "Username:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_6.setText(QtGui.QApplication.translate("LoginConfig", "Login", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("LoginConfig", "Service", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_5.setText(QtGui.QApplication.translate("LoginConfig", "Provider:", None, QtGui.QApplication.UnicodeUTF8))
+
+from PyKDE4.kdeui import KLineEdit
+from PyKDE4.kdeui import KComboBox
