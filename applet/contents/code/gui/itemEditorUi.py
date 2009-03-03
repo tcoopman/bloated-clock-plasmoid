@@ -8,6 +8,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from PyKDE4.kdeui import KColorButton
+from PyKDE4.kdeui import KFontChooser
 
 class Ui_ItemEditor(object):
     def setupUi(self, ItemEditor):
@@ -47,5 +49,44 @@ class Ui_ItemEditor(object):
         self.label.setText(QtGui.QApplication.translate("ItemEditor", "Item name:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("ItemEditor", "Font color:", None, QtGui.QApplication.UnicodeUTF8))
 
-from PyKDE4.kdeui import KColorButton
-from PyKDE4.kdeui import KFontChooser
+
+class ItemEditorWidget(QWidget, Ui_ItemEditor):
+    def __init__(self, parent):
+        QWidget.__init__(self,parent)
+        self.setupUi(self)
+        
+        self.connect(self.nameEdit, SIGNAL("textChanged(QString)"), self.changed)
+        self.connect(self.fontChooser, SIGNAL("fontSelected(QFont)"), self.changed)
+        self.connect(self.colorButton, SIGNAL("changed(QColor)"), self.changed)
+        
+    def changed(self):
+        self.emit(SIGNAL("changed(bool)"), True)
+       
+
+class ItemEditorDialog(KDialog):
+    def __init__(self, parent, item):
+        KDialog.__init__(self,parent)
+        self.setCaption(i18n("Item editor"))
+        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel|KDialog.Apply))
+        
+        w = ItemEditorWidget(self)
+        self.setMainWidget(w)
+        self.connect(self, SIGNAL("applyClicked()"), self.configAccepted)
+        self.connect(self, SIGNAL("okClicked()"), self.configAccepted)
+        self.connect(w, SIGNAL("changed(bool)"), self, SLOT("enableButtonApply(bool)"))
+            
+        self.enableButtonApply(False);
+        
+        self.item = item
+        self.updateUi()
+        
+    def updateUi(self):
+        self.mainWidget().nameEdit.setText(self.item.name)
+        self.mainWidget().fontChooser.setFont(self.item.font)
+        self.mainWidget().colorButton.setColor(self.item.color)
+         
+    def configAccepted(self):
+        self.item.name = self.mainWidget().nameEdit.text()
+        self.item.font = self.mainWidget().fontChooser.font()
+        self.item.color = self.mainWidget().colorButton.color()
+        self.emit(SIGNAL("configAccepted()"))

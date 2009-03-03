@@ -7,8 +7,8 @@ from PyKDE4.kdecore import i18n
 from PyKDE4.plasma import Plasma
 
 
-from itemUi import *
-from itemEditorUi import *
+from gui.itemUi import Ui_Item
+from gui.itemEditorUi import Ui_ItemEditor
         
 class ItemManager():
     def __init__(self):
@@ -155,44 +155,3 @@ class XMLEditWidget(QWidget):
         
     def xml(self):
         return self.edit.toPlainText()
-
-class ItemEditorWidget(QWidget, Ui_ItemEditor):
-    def __init__(self, parent):
-        QWidget.__init__(self,parent)
-        self.setupUi(self)
-        
-        self.connect(self.nameEdit, SIGNAL("textChanged(QString)"), self.changed)
-        self.connect(self.fontChooser, SIGNAL("fontSelected(QFont)"), self.changed)
-        self.connect(self.colorButton, SIGNAL("changed(QColor)"), self.changed)
-        
-    def changed(self):
-        self.emit(SIGNAL("changed(bool)"), True)
-       
-
-class ItemEditorDialog(KDialog):
-    def __init__(self, parent, item):
-        KDialog.__init__(self,parent)
-        self.setCaption(i18n("Item editor"))
-        self.setButtons(KDialog.ButtonCode(KDialog.Ok | KDialog.Cancel|KDialog.Apply))
-        
-        w = ItemEditorWidget(self)
-        self.setMainWidget(w)
-        self.connect(self, SIGNAL("applyClicked()"), self.configAccepted)
-        self.connect(self, SIGNAL("okClicked()"), self.configAccepted)
-        self.connect(w, SIGNAL("changed(bool)"), self, SLOT("enableButtonApply(bool)"))
-            
-        self.enableButtonApply(False);
-        
-        self.item = item
-        self.updateUi()
-        
-    def updateUi(self):
-        self.mainWidget().nameEdit.setText(self.item.name)
-        self.mainWidget().fontChooser.setFont(self.item.font)
-        self.mainWidget().colorButton.setColor(self.item.color)
-         
-    def configAccepted(self):
-        self.item.name = self.mainWidget().nameEdit.text()
-        self.item.font = self.mainWidget().fontChooser.font()
-        self.item.color = self.mainWidget().colorButton.color()
-        self.emit(SIGNAL("configAccepted()"))
