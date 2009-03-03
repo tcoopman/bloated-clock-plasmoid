@@ -27,6 +27,7 @@ class LayoutBuilder():
         item = self.im.getItemByName(element.tag)
         return TextFormat(item, element.text, element.get("align"))
     
+    
 class LayoutItem:
     def setRect(self, rect):
         self.rect = rect
@@ -50,6 +51,7 @@ class Layout(LayoutItem):
         for item in self.items:
             item.draw(painter, item.rect, timeFormatter)
     
+    
 class VLayout(Layout):
     def _updateRects(self,rect):
         itemCount = len(self.items)
@@ -59,6 +61,7 @@ class VLayout(Layout):
         for (item,i) in zip(self.items, range(1,itemCount)):
             rect = QRectF(rect.left(), rect.bottom(), rect.width(), height)
             self.items[i].setRect(rect)    
+    
             
 class HLayout(Layout):
     def _updateRects(self,rect):
