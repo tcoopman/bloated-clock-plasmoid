@@ -10,6 +10,7 @@
 from PyQt4 import QtCore, QtGui
 from PyKDE4.kdeui import KColorButton
 from PyKDE4.kdeui import KFontChooser
+from PyKDE4.kdeui import KDialog
 
 class Ui_ItemEditor(object):
     def setupUi(self, ItemEditor):
@@ -50,7 +51,7 @@ class Ui_ItemEditor(object):
         self.label_2.setText(QtGui.QApplication.translate("ItemEditor", "Font color:", None, QtGui.QApplication.UnicodeUTF8))
 
 
-class ItemEditorWidget(QWidget, Ui_ItemEditor):
+class ItemEditorWidget(QtGui.QWidget, Ui_ItemEditor):
     def __init__(self, parent):
         QWidget.__init__(self,parent)
         self.setupUi(self)

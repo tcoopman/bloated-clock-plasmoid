@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-from PyKDE4.kdeui import *
 from PyKDE4.kdeui import KIcon, KIconLoader
 from PyKDE4.kdecore import i18n
 from PyKDE4.plasma import Plasma
