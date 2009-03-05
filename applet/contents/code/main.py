@@ -49,7 +49,10 @@ class BloatedClockApplet(plasmascript.Applet):
                     <line><item1 parser="klok1" align="left">%hh:%mm:%ss</item1><item2 parser="klok1" align="left">after</item2></line>
                 </body>"""
         lBuilder = LayoutBuilder(self.im, self.pluginLoader)
-        self.l = lBuilder.build(xml)
+        self.layout = lBuilder.build(xml,  self.applet)
+        print self.layout
+        print self.layout.count()
+        self.setLayout(self.layout)
            
     def showConfigurationInterface(self):
         windowTitle = str(self.applet.name()) + " Settings" #i18nc("@title:window", "%s Settings" % str(self.applet.name()))
@@ -104,9 +107,9 @@ class BloatedClockApplet(plasmascript.Applet):
         
         self.emit(SIGNAL("configNeedsSaving()"))
 
-    def paintInterface(self, painter, option, rect):
-        self.l.draw(painter,rect)
-        pass
+#    def paintInterface(self, painter, option, rect):
+#        #self.l.draw(painter,rect)
+#        pass
         
       
 def CreateApplet(parent):

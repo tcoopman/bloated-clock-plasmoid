@@ -22,8 +22,8 @@ class PluginLoader(object):
 class Plugin(QObject):
     def __init__(self):
         QObject.__init__(self)
-        self._output = "EMPTY"
         self.parseText = ""
+        self.outputs = []
         
     def load(self,  options):
         pass
@@ -34,10 +34,19 @@ class Plugin(QObject):
     @pyqtSignature("dataUpdated(const QString &, const Plasma::DataEngine::Data &)")
     def dataUpdated(self, sourceName, data):
         self.updateData(sourceName, data)
-        self.hook.update()
+        print "UPDATING"
+#        for out in self.outputs:
+#            print "IN TEXT"
+#            out.setText(self.parse(out.value))
+#        self.hook.update()
         
     def updateData(self,  sourceName, data):
         pass
+        
+    def addOutput(self,  output):
+        print "ADDING"
+        print output
+        self.outputs.append(output)
         
     @property
     def engine(self):
