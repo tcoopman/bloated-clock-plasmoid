@@ -38,14 +38,10 @@ class LayoutBuilder():
             for key in optionKeys:
                 options[key] = element.get(key)
             plugin.load(options)
+            print "LOADED PLUGIN"
             
     def _readBody(self,  xml,  parent):
         layout = QGraphicsLinearLayout(Qt.Vertical, parent)
-#        label = Plasma.Label()
-#        label.setText("test")
-#        layout.addItem(label)
-#        
-#        return layout
         for element in xml.getiterator("line"):
             print "parsing line"
             layout.addItem(self._buildLine(element,  layout))
@@ -100,7 +96,8 @@ class TextRendererBuilder():
     aligndict = {"left":Qt.AlignLeft, "right":Qt.AlignRight, "center":Qt.AlignCenter}
     def build(self, item, parser,  text,  align):
         label = TextRenderer(text)
-        parser.addOutput(label)
+        #parser.addOutput(label)
+        label.setText("dummy")
         label.setStyleSheet(self._buildStyleSheet(item))
         return label
             

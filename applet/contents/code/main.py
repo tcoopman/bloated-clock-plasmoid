@@ -71,6 +71,16 @@ class BloatedClockApplet(plasmascript.Applet):
         self.dialog.show()
         
     def createConfigurationInterface(self, parent):
+        print "Layout"
+        print self.layout
+        print self.layout.count()
+        pl = self.pluginLoader.getPluginByName("clock")
+        print pl
+        print pl.name
+        print pl.isLoaded
+        print pl.engine
+        print pl.engine.name
+        print pl.engine.isValid()
         self.itemList = ItemListWidget(parent, self.im)
         xml = """<clock>
     <line><item1 align="left">text %hh.%mm:%ss</item1><item2 align="right">2de text</item2></line>
@@ -106,10 +116,6 @@ class BloatedClockApplet(plasmascript.Applet):
         #cg.writeEntry("updateInterval", QVariant(self.ui.updateIntervalSpinBox.value()))
         
         self.emit(SIGNAL("configNeedsSaving()"))
-
-#    def paintInterface(self, painter, option, rect):
-#        #self.l.draw(painter,rect)
-#        pass
         
       
 def CreateApplet(parent):

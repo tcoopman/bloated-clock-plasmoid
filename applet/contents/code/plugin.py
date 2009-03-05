@@ -23,7 +23,7 @@ class Plugin(QObject):
     def __init__(self):
         QObject.__init__(self)
         self.parseText = ""
-        self.outputs = []
+        #self._outputs = []
         
     def load(self,  options):
         pass
@@ -38,15 +38,14 @@ class Plugin(QObject):
 #        for out in self.outputs:
 #            print "IN TEXT"
 #            out.setText(self.parse(out.value))
-#        self.hook.update()
+        self.hook.update()
         
     def updateData(self,  sourceName, data):
         pass
         
-    def addOutput(self,  output):
-        print "ADDING"
-        print output
-        self.outputs.append(output)
+#    def addOutput(self,  output):
+#        pass
+#        self._outputs.append(output)
         
     @property
     def engine(self):
@@ -68,9 +67,12 @@ class Clock(Plugin):
     def load(self, options):
         #A clock has no options at the moment, we could at regions later.
         #Here we can connect the dataengine
+        self.isLoaded = True
         self.engine = "time"
-        print self.engine
         self.engine.connectSource("Europe/Brussels", self, 333)
+        print "DONE LOADING"
+        print self.engine
+        print self.engine.isValid()
         
     def parse(self,  text):
         found = Clock.reg.findall(text)
