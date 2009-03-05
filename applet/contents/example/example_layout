@@ -1,2 +1,6 @@
 <left><item1>%h</item1></left><right><item2>blablabla</item2></right>
 <center><item3>Clock</item3></center>
+
+<timer name="somename" value="10:00:00">Timer ended</timer>
+<clock name ="clock"/>
+<line><item1 align="center" parser="clock">....</item1></line> 

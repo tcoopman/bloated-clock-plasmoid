@@ -13,6 +13,7 @@ from item import ItemListWidget
 from item import XMLEditWidget
 from item import ItemManager
 from layout import LayoutBuilder
+from plugin import PluginLoader
 
 
 class BloatedClockApplet(plasmascript.Applet):
@@ -29,14 +30,11 @@ class BloatedClockApplet(plasmascript.Applet):
         
         self.dialog = None
         self._items()
-        self.timeFormatter = TimeFormatter()
+        self._engines = {}
+        self.pluginLoader = PluginLoader(self)
         
         self.x = False
         self.initGui()
-        
-        #Plasma.Theme.defaultTheme().connect(Plasma.Theme.defaultTheme(), SIGNAL("themeChanged()"), self, SLOT("slotThemeChanged()"))
-    
-        self.connectToEngine()
         
     def initGui(self):
         self.updateUi()
@@ -46,37 +44,12 @@ class BloatedClockApplet(plasmascript.Applet):
         try:
             xml = self.xmlEdit.xml()
         except:
-            xml = """<clock>
-    <line><item1 align="left">text %hh.%mm:%ss</item1><item2 align="right">2de text</item2></line>
-    <line><item1 align="center">center</item1></line>
-    <line><item2 align="right">right</item2></line>
-    </clock>"""
-        lBuilder = LayoutBuilder(self.im)
+            xml = """<plugins><clock name="klok1" other="test" bla="koe" /></plugins>
+                <body>
+                    <line><item1 parser="klok1" align="left">%hh:%mm:%ss</item1></line>
+                </body>"""
+        lBuilder = LayoutBuilder(self.im, self.pluginLoader)
         self.l = lBuilder.build(xml)
-
-#    @pyqtSignature("slotThemeChanged()")  
-#    def themeChanged(self):
-#        pass
-
-    def connectToEngine(self):
-        self.engine = self.dataEngine("time")
-        self.engine.connectSource("Europe/Brussels", self, 333)
-        
-        
-    @pyqtSignature("dataUpdated(const QString &, const Plasma::DataEngine::Data &)")
-    def dataUpdated(self, sourceName, data):
-        time = data[QString("Time")].toTime()
-        date = data[QString("Date")].toDate()
-        self.timeFormatter.set(QDateTime(date, time))
-        self.update()
-
-        #if self.time.minute() == self.lastTimeSeen.minute() and \
-        #self.time.second() == self.lastTimeSeen.second():
-            # avoid unnecessary repaints
-         #   return
-            
-          #  self.lastTimeSeen = self.time
-           # self.update()
            
     def showConfigurationInterface(self):
         windowTitle = str(self.applet.name()) + " Settings" #i18nc("@title:window", "%s Settings" % str(self.applet.name()))
@@ -132,26 +105,9 @@ class BloatedClockApplet(plasmascript.Applet):
         self.emit(SIGNAL("configNeedsSaving()"))
 
     def paintInterface(self, painter, option, rect):
-        self.l.draw(painter,rect, self.timeFormatter)
-      
-class TimeFormatter():
-    reg = re.compile("%[a-zA-Z]+")
-    def set(self, time):
-        self.time = time
+        self.l.draw(painter,rect)
+        pass
         
-    def format(self, scheme):
-        found = TimeFormatter.reg.findall(scheme)
-        parts = TimeFormatter.reg.split(scheme)
-        result = []
-        if found == []:
-            return parts[0]
-        
-        for (part, code) in zip(parts,found):
-            result.append(str(part))
-            result.append(str(self.time.toString(code[1:])))
-        return "".join(result)
-    
-    
       
 def CreateApplet(parent):
     return BloatedClockApplet(parent)

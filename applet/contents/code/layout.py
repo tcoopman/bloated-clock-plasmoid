@@ -5,19 +5,18 @@ from PyKDE4.plasma import Plasma
 
 from xml.etree.cElementTree import XML
 
-
 class LayoutBuilder():
-    def __init__(self, im):
+    def __init__(self, im,  pl):
         self.im = im
+        self.pl = pl
+        self.plugins = {}
         
     def build(self, xml):
-        self.tree = XML(xml)
-        layout = VLayout()
-        for element in self.tree:
-            layout.addItem(self._buildLine(element, layout))
-        return layout
+        self.tree = XML(self._surround(xml))
+        self._readPlugins(self.tree.find("plugins"))
+        return self._readBody(self.tree.find("body"))
             
-    def _buildLine(self, element, parent):
+    def _buildLine(self, element):
         line = HLayout()
         for e in element:
             line.addItem(self._buildLabel(e))
@@ -25,7 +24,34 @@ class LayoutBuilder():
             
     def _buildLabel(self, element):
         item = self.im.getItemByName(element.tag)
-        return TextFormat(item, element.text, element.get("align"))
+        plugin = self.plugins[element.get('parser')]
+        plugin.parse(element.text)
+        print plugin
+        print plugin.parseText
+        return TextRenderer(item, plugin, element.get("align"))
+        
+    def _readPlugins(self,  xml):
+        for element in xml:
+            plugin = self.pl.getPluginByName(element.tag)
+            self.plugins[element.get("name")] = plugin
+            optionKeys = element.keys()
+            optionKeys.remove("name")
+            options = {}
+            for key in optionKeys:
+                options[key] = element.get(key)
+            plugin.load(options)
+            
+    def _readBody(self,  xml):
+        layout = VLayout()
+        for element in xml.getiterator("line"):
+            print "parsing line"
+            layout.addItem(self._buildLine(element))
+        return layout
+        
+    
+    def _surround(self,  xml):
+        print xml
+        return "<all>" + xml + "</all>"
     
 class LayoutItem:
     def setRect(self, rect):
@@ -45,10 +71,10 @@ class Layout(LayoutItem):
     def _updateRects(self,rect):
         pass
     
-    def draw(self, painter, rect,timeFormatter):
+    def draw(self, painter, rect):
         self._updateRects(rect)
         for item in self.items:
-            item.draw(painter, item.rect, timeFormatter)
+            item.draw(painter, item.rect)
     
 class VLayout(Layout):
     def _updateRects(self,rect):
@@ -71,61 +97,17 @@ class HLayout(Layout):
             self.items[i].setRect(rect)
             
             
-class TextFormat(LayoutItem):
+class TextRenderer(LayoutItem):
     aligndict = {"left":Qt.AlignLeft, "right":Qt.AlignRight, "center":Qt.AlignCenter}
-    def __init__(self, item, text, align):
+    def __init__(self, item, parser, align):
         self.item = item
-        self.text = text
+        self.parser = parser
         self.align = self._alignToFlag(align)
         
-    def draw(self, painter, rect, timeFormatter):
-        text = timeFormatter.format(self.text)
+    def draw(self, painter, rect):
         painter.setPen(self.item.color)
         painter.setFont(self.item.font)
-        painter.drawText(rect, (Qt.TextDontClip | self.align), text)
+        painter.drawText(rect, (Qt.TextDontClip | self.align), self.parser.output)
         
     def _alignToFlag(self, align):
-        return TextFormat.aligndict[align]
-        
-    
-class MyLabel(Plasma.Label):
-    def __init__(self, text):
-        Plasma.Label.__init__(self)
-        self.setText(text)
-        self._text = text
-    
-#class LabelBuilder():
-#    def build(self, item, text):
-#        label = MyLabel(text)
-#        label.setStyleSheet(self._buildStyleSheet(item))
-#        return label
-#            
-#    def _buildStyleSheet(self, item):
-#        result = []
-#        result.append("color: ")
-#        result.append(str(item.color.name()))
-#        result.append(";\n")
-#        result.append('font-family: "')
-#        result.append(str(item.font.family()))
-#        result.append('";\n')
-#        result.append("font-size: ")
-#        result.append(str(item.font.pointSize()))
-#        result.append("pt;\n")
-#        result.append("font-style: ")
-#        result.append(str(item.font.style()))
-#        result.append(";\n")
-#        result.append("font-weight: ")
-#        result.append(str(item.font.weight()))
-#        result.append(";")
-#        return "".join(result)
-#          
-#            
-#        
-#if __name__ == "__main__":
-#    xml = """<clock>
-#    <line><left><item1>text</item1></left></line>
-#    <line></line>
-#    </clock>"""
-#    #layout = QGraphicsLinearLayout()
-#    layoutBuilder = LayoutBuilder(None)
-#    layoutBuilder.buildLayout(xml)
+        return TextRenderer.aligndict[align]
