@@ -34,18 +34,10 @@ class Plugin(QObject):
     @pyqtSignature("dataUpdated(const QString &, const Plasma::DataEngine::Data &)")
     def dataUpdated(self, sourceName, data):
         self.updateData(sourceName, data)
+        self.hook.update()
         
     def updateData(self,  sourceName, data):
         pass
-        
-    @property
-    def output(self):
-        return self._output
-        
-    @output.setter
-    def output(self,  value):
-        self._output = value
-        self.hook.update()
         
     @property
     def engine(self):
@@ -72,20 +64,18 @@ class Clock(Plugin):
         self.engine.connectSource("Europe/Brussels", self, 333)
         
     def parse(self,  text):
-        self.parseText = text
+        found = Clock.reg.findall(text)
+        parts = Clock.reg.split(text)
+        result = []
+        if found == []:
+            return parts[0]
+        else:
+            for (part, code) in zip(parts,found):
+                result.append(str(part))
+                result.append(str(self.dateTime.toString(code[1:])))
+            return "".join(result)
         
     def updateData(self,  sourceName,  data):
-        if self.parseText:
-            time = data[QString("Time")].toTime()
-            date = data[QString("Date")].toDate()
-            dateTime = QDateTime(date, time)
-            found = Clock.reg.findall(self.parseText)
-            parts = Clock.reg.split(self.parseText)
-            result = []
-            if found == []:
-                self.output = parts[0]
-            else:
-                for (part, code) in zip(parts,found):
-                    result.append(str(part))
-                    result.append(str(dateTime.toString(code[1:])))
-                self.output = "".join(result)
+        time = data[QString("Time")].toTime()
+        date = data[QString("Date")].toDate()
+        self.dateTime = QDateTime(date, time)

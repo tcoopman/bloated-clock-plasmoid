@@ -25,10 +25,7 @@ class LayoutBuilder():
     def _buildLabel(self, element):
         item = self.im.getItemByName(element.tag)
         plugin = self.plugins[element.get('parser')]
-        plugin.parse(element.text)
-        print plugin
-        print plugin.parseText
-        return TextRenderer(item, plugin, element.get("align"))
+        return TextRenderer(item, plugin,element.text,  element.get("align"))
         
     def _readPlugins(self,  xml):
         for element in xml:
@@ -99,15 +96,16 @@ class HLayout(Layout):
             
 class TextRenderer(LayoutItem):
     aligndict = {"left":Qt.AlignLeft, "right":Qt.AlignRight, "center":Qt.AlignCenter}
-    def __init__(self, item, parser, align):
+    def __init__(self, item, parser, text,  align):
         self.item = item
         self.parser = parser
+        self.text = text
         self.align = self._alignToFlag(align)
         
     def draw(self, painter, rect):
         painter.setPen(self.item.color)
         painter.setFont(self.item.font)
-        painter.drawText(rect, (Qt.TextDontClip | self.align), self.parser.output)
+        painter.drawText(rect, (Qt.TextDontClip | self.align), self.parser.parse(self.text))
         
     def _alignToFlag(self, align):
         return TextRenderer.aligndict[align]

@@ -38,7 +38,7 @@ class BloatedClockApplet(plasmascript.Applet):
         
     def initGui(self):
         self.updateUi()
-        #self.resize(250,250)
+        self.resize(250,250)
         
     def updateUi(self):
         try:
@@ -46,7 +46,7 @@ class BloatedClockApplet(plasmascript.Applet):
         except:
             xml = """<plugins><clock name="klok1" other="test" bla="koe" /></plugins>
                 <body>
-                    <line><item1 parser="klok1" align="left">%hh:%mm:%ss</item1></line>
+                    <line><item1 parser="klok1" align="left">%hh:%mm:%ss</item1><item2 parser="klok1" align="left">after</item2></line>
                 </body>"""
         lBuilder = LayoutBuilder(self.im, self.pluginLoader)
         self.l = lBuilder.build(xml)
