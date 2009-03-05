@@ -38,7 +38,6 @@ class LayoutBuilder():
             for key in optionKeys:
                 options[key] = element.get(key)
             plugin.load(options)
-            print "LOADED PLUGIN"
             
     def _readBody(self,  xml,  parent):
         layout = QGraphicsLinearLayout(Qt.Vertical, parent)
@@ -47,43 +46,9 @@ class LayoutBuilder():
             layout.addItem(self._buildLine(element,  layout))
         return layout
         
-    
     def _surround(self,  xml):
         print xml
         return "<all>" + xml + "</all>"
-    
-
-#class Layout(QGraphicsLinearLayout):
-#    def __init__(self, parent):
-#        QGraphicsLinearLayout.__init__(self,  parent)
-#    
-#class VLayout(Layout):
-#    def __init__(self,  parent):
-#        Layout.__init__(self, parent)
-#        self.setOrientation(Qt.Vertical)
-#        
-##    def _updateRects(self,rect):
-##        itemCount = len(self.items)
-##        height = rect.height()/ itemCount
-##        rect = QRectF(rect.left(), rect.top(), rect.width(), height)
-##        self.items[0].setRect(rect)
-##        for (item,i) in zip(self.items, range(1,itemCount)):
-##            rect = QRectF(rect.left(), rect.bottom(), rect.width(), height)
-##            self.items[i].setRect(rect)    
-#            
-#class HLayout(Layout):
-#     def __init__(self,  parent):
-#        Layout.__init__(self, parent)
-#        self.setOrientation(Qt.Horizontal)
-#        
-##    def _updateRects(self,rect):
-##        itemCount = len(self.items)
-##        width = rect.width()/ itemCount
-##        rect = QRectF(rect.left(), rect.top(), width, rect.height())
-##        self.items[0].setRect(rect)
-##        for (item,i) in zip(self.items, range(1,itemCount)):
-##            rect = QRectF(rect.right(), rect.top(), width, rect.height())
-##            self.items[i].setRect(rect)
             
             
 class TextRenderer(Plasma.Label):
@@ -96,9 +61,10 @@ class TextRendererBuilder():
     aligndict = {"left":Qt.AlignLeft, "right":Qt.AlignRight, "center":Qt.AlignCenter}
     def build(self, item, parser,  text,  align):
         label = TextRenderer(text)
-        #parser.addOutput(label)
+        parser.addOutput(label)
         label.setText("dummy")
         label.setStyleSheet(self._buildStyleSheet(item))
+        label.setAlignment(self._alignToFlag(align))
         return label
             
     def _buildStyleSheet(self, item):
@@ -121,5 +87,5 @@ class TextRendererBuilder():
         return "".join(result)
         
     def _alignToFlag(self, align):
-        return TextRenderer.aligndict[align]
+        return TextRendererBuilder.aligndict[align]
     

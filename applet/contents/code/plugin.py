@@ -9,21 +9,26 @@ from PyQt4.QtCore import *
 class PluginLoader(object):
     def __init__(self,  applet):
         self.plugins = {}
-        self.plugins["clock"] = Clock 
+        self.plugins["clock"] = Clock
+        self.init = {}
         self._applet = applet
         
     def getPluginByName(self, name):
-        pluginClass = self.plugins[name]
-        plugin = pluginClass()
-        plugin.hook = self._applet
-        return plugin
+        try:
+            return self.init[name]
+        except KeyError:
+            pluginClass = self.plugins[name]
+            plugin = pluginClass()
+            plugin.hook = self._applet
+            self.init[name] = plugin
+            return plugin
         
 
 class Plugin(QObject):
     def __init__(self):
         QObject.__init__(self)
         self.parseText = ""
-        #self._outputs = []
+        self._outputs = []
         
     def load(self,  options):
         pass
@@ -34,18 +39,15 @@ class Plugin(QObject):
     @pyqtSignature("dataUpdated(const QString &, const Plasma::DataEngine::Data &)")
     def dataUpdated(self, sourceName, data):
         self.updateData(sourceName, data)
-        print "UPDATING"
-#        for out in self.outputs:
-#            print "IN TEXT"
-#            out.setText(self.parse(out.value))
+        for out in self._outputs:
+            out.setText(self.parse(out.value))
         self.hook.update()
         
     def updateData(self,  sourceName, data):
         pass
         
-#    def addOutput(self,  output):
-#        pass
-#        self._outputs.append(output)
+    def addOutput(self,  output):
+        self._outputs.append(output)
         
     @property
     def engine(self):
@@ -70,9 +72,6 @@ class Clock(Plugin):
         self.isLoaded = True
         self.engine = "time"
         self.engine.connectSource("Europe/Brussels", self, 333)
-        print "DONE LOADING"
-        print self.engine
-        print self.engine.isValid()
         
     def parse(self,  text):
         found = Clock.reg.findall(text)
